@@ -1,3 +1,4 @@
+import csv
 class Tarefa:
   def __init__(self, titulo, data, categoria, status='Pendente'):
     self.titulo = titulo
@@ -23,19 +24,22 @@ class Tarefa:
     return f'{self.titulo}, {self.data}, {self.categoria}, {self.status}'
 
 
-todolist = {}
+#todolist = {}
 
 fechar = 1
 
-while fechar!=0:
+while fechar!=0: 
   titulo = input('Digite o titulo da tarefa: ')
   data = input('Digite a data da tarefa: ')
   categoria = input('Digite a categoria da tarefa: ')
 
   tarefa = Tarefa(titulo, data, categoria)
-  todolist[tarefa.titulo] = {tarefa.data, tarefa.categoria}
-  #print(tarefa.titulo)
+  
+  with open('base_de_dados.csv', 'a') as arquivo:
+    tabela = csv.writer(arquivo, delimiter=';', lineterminator='\n')
+    tabela.writerow([tarefa.titulo, tarefa.data, tarefa.categoria, tarefa.status])
+  
 
   fechar = int(input('Deseja continuar? 1=Deseja continuar, 0= Encerrar programa: '))
 
-print(todolist)
+#print(todolist)
