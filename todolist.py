@@ -6,6 +6,7 @@ class Tarefa:
     self.categoria = categoria
     self.status = status
     self.ativo = ativo
+  
   def alterar_status(self):
     if self.status == 'Pendente':
       self.status = 'Concluido'
@@ -26,20 +27,23 @@ class Tarefa:
       escritor = csv.writer(arquivo, delimiter=';', lineterminator='\n') 
       escritor.writerows(conteudo)
     print(f'a atividade de titulo {titulo}, foi removida!')
-  def visualizar_tarefa(self, data_requerida):
-    pass
-    #return print()
-
+  
+  def visualizar_tarefa(data_requerida):
+    with open ('base_de_dados.csv') as arquivo: 
+      tabela = csv.reader(arquivo, delimiter=';', lineterminator='\n') 
+ 
+      conteudo = list(tabela) 
+ 
+    for linha in conteudo: 
+      if linha[1] == data_requerida and linha[4] == '1': 
+        print(linha)
+  
   def __repr__(self):
     return f'{self.titulo}, {self.data}, {self.categoria}, {self.status}'
 
 
-#todolist = {}
-
-fechar = 1
-
-while fechar!=0: 
-  menu = input('digite a opção que você gostaria de seguir (1- cadastrar nova tarefa, 2- remover uma tarefa)')
+menu = input('digite a opção que você gostaria de seguir (1- cadastrar nova tarefa, 2- remover uma tarefa, 3- visualizar uma tarefa, 0- sair do programa)')
+while menu!='0': 
   if menu == '1':
     titulo = input('Digite o titulo da tarefa: ')
     data = input('Digite a data da tarefa: ')
@@ -50,10 +54,15 @@ while fechar!=0:
     with open('base_de_dados.csv', 'a') as arquivo:
       tabela = csv.writer(arquivo, delimiter=';', lineterminator='\n')
       tabela.writerow([tarefa.titulo, tarefa.data, tarefa.categoria, tarefa.status, tarefa.ativo])
+  
   if menu == '2':
     titulo = input('Digite o titulo da tarefa que irá ser removida: ')  
     Tarefa.remover_tarefa(titulo)
+  
+  if menu == '3':
+    data = input('Digite a data da tarefa que você deseja visualizar: ')  
+    Tarefa.visualizar_tarefa(data)
 
-  fechar = int(input('Deseja continuar? 1=Deseja continuar, 0= Encerrar programa: '))
+  menu = input('digite a opção que você gostaria de seguir (1- cadastrar nova tarefa, 2- remover uma tarefa, 3- visualizar uma tarefa, 0- sair do programa)')
 
 #print(todolist)
