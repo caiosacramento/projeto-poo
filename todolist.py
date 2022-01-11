@@ -38,11 +38,16 @@ class Tarefa:
       if linha[1] == data_requerida and linha[4] == '1': 
         print(linha)
   
+  def criar_tarefa(self):
+    with open('base_de_dados.csv', 'a') as arquivo:
+      tabela = csv.writer(arquivo, delimiter=';', lineterminator='\n')
+      tabela.writerow([self.titulo, self.data, self.categoria, self.status, self.ativo])
+
   def __repr__(self):
     return f'{self.titulo}, {self.data}, {self.categoria}, {self.status}'
 
 
-menu = input('digite a opção que você gostaria de seguir (1- cadastrar nova tarefa, 2- remover uma tarefa, 3- visualizar uma tarefa, 0- sair do programa)')
+menu = input('digite a opção que você gostaria de seguir (1- cadastrar nova tarefa, 2- remover uma tarefa, 3- visualizar uma tarefa, 0- sair do programa): ')
 while menu!='0': 
   if menu == '1':
     titulo = input('Digite o titulo da tarefa: ')
@@ -50,10 +55,7 @@ while menu!='0':
     categoria = input('Digite a categoria da tarefa: ')
 
     tarefa = Tarefa(titulo, data, categoria)
-  
-    with open('base_de_dados.csv', 'a') as arquivo:
-      tabela = csv.writer(arquivo, delimiter=';', lineterminator='\n')
-      tabela.writerow([tarefa.titulo, tarefa.data, tarefa.categoria, tarefa.status, tarefa.ativo])
+    tarefa.criar_tarefa()
   
   if menu == '2':
     titulo = input('Digite o titulo da tarefa que irá ser removida: ')  
@@ -63,6 +65,6 @@ while menu!='0':
     data = input('Digite a data da tarefa que você deseja visualizar: ')  
     Tarefa.visualizar_tarefa(data)
 
-  menu = input('digite a opção que você gostaria de seguir (1- cadastrar nova tarefa, 2- remover uma tarefa, 3- visualizar uma tarefa, 0- sair do programa)')
+  menu = input('digite a opção que você gostaria de seguir (1- cadastrar nova tarefa, 2- remover uma tarefa, 3- visualizar uma tarefa, 0- sair do programa): ')
 
 #print(todolist)
