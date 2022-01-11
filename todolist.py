@@ -1,4 +1,6 @@
 import csv
+import os
+import datetime
 class Tarefa:
   def __init__(self, titulo, data, categoria, status='Pendente',ativo= 1):
     self.titulo = titulo
@@ -53,21 +55,34 @@ class Tarefa:
     for linha in conteudo: 
       if linha[1] == data_requerida and linha[4] == '1': 
         print(linha)
-  
+    
   def criar_tarefa(self):
     with open('base_de_dados.csv', 'a') as arquivo:
       tabela = csv.writer(arquivo, delimiter=';', lineterminator='\n')
       tabela.writerow([self.titulo, self.data, self.categoria, self.status, self.ativo])
+    os.system('cls')
+
 
   def __repr__(self):
     return f'{self.titulo}, {self.data}, {self.categoria}, {self.status}'
 
-
+hoje = datetime.date.today()
 menu = input('digite a opção que você gostaria de seguir (1- cadastrar nova tarefa, 2- remover uma tarefa, 3- visualizar uma tarefa, 4- Alterar status, 0- sair do programa): ')
 while menu!='0': 
   if menu == '1':
     titulo = input('Digite o titulo da tarefa: ')
     data = input('Digite a data da tarefa: ')
+    data_comp = data.split('/')
+   
+    while True:
+      if int(data_comp[2]) >= hoje.year and data_comp[1] >= hoje.month and data_comp[0] >= hoje.day: 
+        pass
+      else:
+        print("data invalid")
+        data = input('Digite a data da tarefa: ')
+        data_comp = data.split('/')
+        break
+      
     categoria = input('Digite a categoria da tarefa: ')
 
     tarefa = Tarefa(titulo, data, categoria)
@@ -77,14 +92,20 @@ while menu!='0':
   if menu == '2':
     titulo = input('Digite o titulo da tarefa que irá ser removida: ')  
     Tarefa.remover_tarefa(titulo)
+    
+
   
   if menu == '3':
     data = input('Digite a data da tarefa que você deseja visualizar: ')  
     Tarefa.visualizar_tarefa(data)
+    
+
 
   if menu == '4':
     titulo = input('Digite o titulo da tarefa que irá ser atualizada: ')  
     Tarefa.alterar_status(titulo)
+    
+
 
   menu = input('digite a opção que você gostaria de seguir (1- cadastrar nova tarefa, 2- remover uma tarefa, 3- visualizar uma tarefa, 4- Alterar status, 0- sair do programa): ')
 
