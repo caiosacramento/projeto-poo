@@ -7,11 +7,23 @@ class Tarefa:
     self.status = status
     self.ativo = ativo
   
-  def alterar_status(self):
-    if self.status == 'Pendente':
-      self.status = 'Concluido'
-    elif self.status == 'Concluido':
-      self.status = 'Pendente'
+  def alterar_status(titulo):
+    with open ('base_de_dados.csv') as arquivo: 
+      tabela = csv.reader(arquivo, delimiter=';', lineterminator='\n') 
+ 
+      conteudo = list(tabela) 
+ 
+    for linha in conteudo: 
+      if linha[0] == titulo:  
+        if linha[3] == 'Pendente':
+          linha[3] = 'Concluido'
+        elif linha[3] == 'Concluido':
+          linha[3] = 'Pendente'
+
+    with open ('base_de_dados.csv', 'w') as arquivo: 
+      escritor = csv.writer(arquivo, delimiter=';', lineterminator='\n') 
+      escritor.writerows(conteudo)
+    print(f'o status da atividade de titulo {titulo} foi atualizado!')
 
   def remover_tarefa(titulo):
     with open ('base_de_dados.csv') as arquivo: 
@@ -47,7 +59,7 @@ class Tarefa:
     return f'{self.titulo}, {self.data}, {self.categoria}, {self.status}'
 
 
-menu = input('digite a opção que você gostaria de seguir (1- cadastrar nova tarefa, 2- remover uma tarefa, 3- visualizar uma tarefa, 0- sair do programa): ')
+menu = input('digite a opção que você gostaria de seguir (1- cadastrar nova tarefa, 2- remover uma tarefa, 3- visualizar uma tarefa, 4- Alterar status, 0- sair do programa): ')
 while menu!='0': 
   if menu == '1':
     titulo = input('Digite o titulo da tarefa: ')
@@ -65,6 +77,9 @@ while menu!='0':
     data = input('Digite a data da tarefa que você deseja visualizar: ')  
     Tarefa.visualizar_tarefa(data)
 
-  menu = input('digite a opção que você gostaria de seguir (1- cadastrar nova tarefa, 2- remover uma tarefa, 3- visualizar uma tarefa, 0- sair do programa): ')
+  if menu == '4':
+    titulo = input('Digite o titulo da tarefa que irá ser atualizada: ')  
+    Tarefa.alterar_status(titulo)
 
-#print(todolist)
+  menu = input('digite a opção que você gostaria de seguir (1- cadastrar nova tarefa, 2- remover uma tarefa, 3- visualizar uma tarefa, 4- Alterar status, 0- sair do programa): ')
+
