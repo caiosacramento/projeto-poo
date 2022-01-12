@@ -33,6 +33,7 @@ class Tarefa:
       print(f'o status da atividade de titulo {titulo} foi atualizado!')
 
   def remover_tarefa(titulo):
+    contador_remover = 0
     with open ('base_de_dados.csv') as arquivo: 
       tabela = csv.reader(arquivo, delimiter=';', lineterminator='\n') 
  
@@ -40,14 +41,18 @@ class Tarefa:
  
     for linha in conteudo: 
       if linha[0] == titulo: 
+        contador_remover += 1  
         linha[4] = 0 
-    
-    with open ('base_de_dados.csv', 'w') as arquivo: 
-      escritor = csv.writer(arquivo, delimiter=';', lineterminator='\n') 
-      escritor.writerows(conteudo)
-    print(f'a atividade de titulo {titulo}, foi removida!')
+    if contador_remover == 0:
+      print (f"titulo inexistente")
+    else:
+      with open ('base_de_dados.csv', 'w') as arquivo: 
+        escritor = csv.writer(arquivo, delimiter=';', lineterminator='\n') 
+        escritor.writerows(conteudo)
+      print(f'a atividade de titulo {titulo}, foi removida!')
   
   def visualizar_tarefa(data_requerida):
+    contador_visualizar = 0
     with open ('base_de_dados.csv') as arquivo: 
       tabela = csv.reader(arquivo, delimiter=';', lineterminator='\n') 
  
@@ -55,7 +60,10 @@ class Tarefa:
  
     for linha in conteudo: 
       if linha[1] == data_requerida and linha[4] == '1': 
+        contador_visualizar += 1
         print(linha)
+    if contador_visualizar == 0: 
+      print(f"nenhuma tarefa foi cadastrada para o dia {data_requerida}")
     
   def criar_tarefa(self):
     with open('base_de_dados.csv', 'a') as arquivo:
