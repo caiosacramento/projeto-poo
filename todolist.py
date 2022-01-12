@@ -1,6 +1,7 @@
 import csv
 import os
 import datetime
+import inquirer
 class Tarefa:
   def __init__(self, titulo, data, categoria, status='Pendente',ativo= 1):
     self.titulo = titulo
@@ -15,7 +16,7 @@ class Tarefa:
       tabela = csv.reader(arquivo, delimiter=';', lineterminator='\n') 
  
       conteudo = list(tabela) 
-  
+
     for linha in conteudo: 
       if linha[0] == titulo:
         contador += 1  
@@ -66,46 +67,65 @@ class Tarefa:
   def __repr__(self):
     return f'{self.titulo}, {self.data}, {self.categoria}, {self.status}'
 
+def menu():
+  questions = [
+    inquirer.List('option',
+      message='Escolha uma das opções abaixo',
+      choices=[
+        'Cadastrar nova tarefa',
+        'Remover uma tarefa',
+        'Visualizar uma tarefa',
+        'Alterar status',
+        'Encerrar'
+      ],
+    ),
+  ]
+  answers = inquirer.prompt(questions)
+  return answers
+
+
 hoje = datetime.date.today()
-menu = input('digite a opção que você gostaria de seguir (1- cadastrar nova tarefa, 2- remover uma tarefa, 3- visualizar uma tarefa, 4- Alterar status, 0- sair do programa): ')
-while menu!='0': 
-  if menu == '1':
+answers = menu()
+value = list(answers.values())
+value = value[0]
+
+while value != 'Encerrar': 
+  if value == 'Cadastrar nova tarefa':
     titulo = input('Digite o titulo da tarefa: ')
     data = input('Digite a data da tarefa: ')
     data_comp = data.split('/')
    
     while True:
-      if int(data_comp[2]) >= hoje.year and data_comp[1] >= hoje.month and data_comp[0] >= hoje.day: 
-        pass
+      if int(data_comp[2]) >= hoje.year and int(data_comp[1]) >= hoje.month and int(data_comp[0]) >= hoje.day: 
+        break
       else:
-        print("data invalid")
+        print("Data invalida")
         data = input('Digite a data da tarefa: ')
         data_comp = data.split('/')
-        break
-      
+              
     categoria = input('Digite a categoria da tarefa: ')
 
     tarefa = Tarefa(titulo, data, categoria)
     
     tarefa.criar_tarefa()
   
-  if menu == '2':
+  if value == 'Remover uma tarefa':
     titulo = input('Digite o titulo da tarefa que irá ser removida: ')  
     Tarefa.remover_tarefa(titulo)
     
 
   
-  if menu == '3':
+  if value == 'Visualizar uma tarefa':
     data = input('Digite a data da tarefa que você deseja visualizar: ')  
     Tarefa.visualizar_tarefa(data)
     
 
 
-  if menu == '4':
+  if value == 'Alterar status':
     titulo = input('Digite o titulo da tarefa que irá ser atualizada: ')  
     Tarefa.alterar_status(titulo)
     
-
-
-  menu = input('digite a opção que você gostaria de seguir (1- cadastrar nova tarefa, 2- remover uma tarefa, 3- visualizar uma tarefa, 4- Alterar status, 0- sair do programa): ')
+  answers = menu()
+  value = list(answers.values())
+  value = value[0]
 
